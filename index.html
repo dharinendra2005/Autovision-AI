@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoVision AI - Used Car Price Prediction</title>
+    <meta name="description" content="AI-powered used car price prediction based on image upload and OCR number plate scanning.">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="background-effects">
+        <div class="glow glow-1"></div>
+        <div class="glow glow-2"></div>
+    </div>
+
+    <header class="app-header">
+        <div class="logo">
+            <i class="fa-solid fa-car-side"></i>
+            <span>AutoVision AI</span>
+        </div>
+        <p class="tagline">Smart Valuation & Analysis Engine</p>
+    </header>
+
+    <main class="container">
+        
+        <!-- Section 1: Upload -->
+        <section id="upload-section" class="glass-panel active">
+            <div class="upload-header">
+                <h2>Upload Vehicle Image</h2>
+                <p>Upload a clear image showing the car and number plate for accurate OCR and damage assessment.</p>
+            </div>
+            
+            <div class="upload-area" id="drop-zone">
+                <input type="file" id="file-input" accept="image/*" hidden>
+                <div class="upload-content">
+                    <div class="icon-pulse">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                    </div>
+                    <h3>Drag & Drop your image here</h3>
+                    <p>or</p>
+                    <button class="btn-primary" onclick="document.getElementById('file-input').click()">Browse Files</button>
+                    <span class="file-hint">Supports: JPG, PNG, WEBP (Max 5MB)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Processing State -->
+        <section id="processing-section" class="glass-panel hidden">
+            <div class="processing-content">
+                <div class="scanner-container">
+                    <div class="car-wireframe">
+                        <i class="fa-solid fa-car"></i>
+                    </div>
+                    <div class="scanner-line"></div>
+                </div>
+                <h2 id="processing-title">Initiating Analysis...</h2>
+                <p id="processing-subtitle" class="text-muted">Connecting to AI engine</p>
+                
+                <div class="progress-container">
+                    <div class="progress-bar" id="progress-bar"></div>
+                </div>
+                
+                <ul class="processing-steps" id="processing-steps">
+                    <li class="step pending" id="step-1"><i class="fa-solid fa-circle-notch fa-spin"></i> Image Enhancements & Preprocessing</li>
+                    <li class="step pending" id="step-2"><i class="fa-solid fa-circle-notch fa-spin"></i> OCR Number Plate Extraction</li>
+                    <li class="step pending" id="step-3"><i class="fa-solid fa-circle-notch fa-spin"></i> Visual Damage Inspection</li>
+                    <li class="step pending" id="step-4"><i class="fa-solid fa-circle-notch fa-spin"></i> Fetching RTO Database & History</li>
+                    <li class="step pending" id="step-5"><i class="fa-solid fa-circle-notch fa-spin"></i> Finalizing Price Prediction</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Section 3: Results Dashboard -->
+        <section id="results-section" class="hidden">
+            <div class="results-header">
+                <h2>Analysis Complete</h2>
+                <button class="btn-secondary" id="btn-reset" onclick="location.reload()"><i class="fa-solid fa-rotate-right"></i> New Scan</button>
+            </div>
+            
+            <div class="dashboard-grid">
+                
+                <!-- Left Column: Image & Price -->
+                <div class="left-col">
+                    <div class="glass-panel image-preview-card">
+                        <div class="image-wrapper">
+                            <img id="uploaded-image" src="" alt="Analyzed Car">
+                            <div class="scan-overlay"></div>
+                            <div class="plate-highlight">
+                                <span id="res-plate">KA-01-AB-1234</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel price-card gradient-border">
+                        <h3>Estimated Market Value</h3>
+                        <div class="price-display">
+                            <span class="currency">₹</span>
+                            <span class="amount" id="res-price">--</span>
+                        </div>
+                        <p class="confidence">AI Confidence Score: <strong class="text-green">94%</strong></p>
+                    </div>
+                </div>
+
+                <!-- Right Column: Specs & Condition -->
+                <div class="right-col">
+                    
+                    <div class="glass-panel specs-card">
+                        <div class="card-title">
+                            <i class="fa-solid fa-list-check"></i> Vehicle Specifications
+                        </div>
+                        <div class="specs-grid">
+                            <div class="spec-item">
+                                <span class="label">Manufacturer</span>
+                                <strong id="res-manufacturer">--</strong>
+                            </div>
+                            <div class="spec-item">
+                                <span class="label">Model</span>
+                                <strong id="res-model">--</strong>
+                            </div>
+                            <div class="spec-item">
+                                <span class="label">Year</span>
+                                <strong id="res-year">--</strong>
+                            </div>
+                            <div class="spec-item">
+                                <span class="label">Variant</span>
+                                <strong id="res-variant">--</strong>
+                            </div>
+                            <div class="spec-item">
+                                <span class="label">Fuel Type</span>
+                                <strong id="res-fuel">--</strong>
+                            </div>
+                            <div class="spec-item">
+                                <span class="label">Transmission</span>
+                                <strong id="res-transmission">--</strong>
+                            </div>
+                            <div class="spec-item">
+                                <span class="label">Body Type</span>
+                                <strong id="res-body">--</strong>
+                            </div>
+                            <div class="spec-item">
+                                <span class="label">Color</span>
+                                <strong id="res-color">--</strong>
+                            </div>
+                            <div class="spec-item">
+                                <span class="label">Ownership</span>
+                                <strong id="res-ownership">--</strong>
+                            </div>
+                            <div class="spec-item">
+                                <span class="label">KM Driven</span>
+                                <strong id="res-km">--</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel condition-card">
+                        <div class="card-title">
+                            <i class="fa-solid fa-microscope"></i> Visual AI Inspection
+                        </div>
+                        <div class="condition-content">
+                            <div class="condition-row">
+                                <span>Overall Condition</span>
+                                <div class="status-badge excellent" id="res-condition">Excellent</div>
+                            </div>
+                            <div class="condition-row">
+                                <span>Damage Detected</span>
+                                <span id="res-damage" class="text-warning">Minor scratches on front bumper</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
